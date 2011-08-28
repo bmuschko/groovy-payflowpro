@@ -1,0 +1,48 @@
+apply plugin: 'groovy'
+apply plugin: 'idea'
+
+def compatibilityVersion = 1.6
+sourceCompatibility = compatibilityVersion
+targetCompatibility = compatibilityVersion
+version = '0.1'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    groovy 'org.codehaus.groovy:groovy-all:1.8.1'
+    compile 'org.codehaus.groovy.modules.http-builder:http-builder:0.5.1'
+    testCompile 'org.mockito:mockito-all:1.9.0-rc1'
+    testCompile 'org.slf4j:slf4j-api:1.6.1'
+    testCompile 'org.slf4j:slf4j-log4j12:1.6.1'
+    testCompile 'junit:junit:4.+'
+}
+
+jar {
+    manifest {
+        attributes 'Implementation-Title': 'Groovy client for Payflow Pro API',
+                   'Implementation-Version': version,
+                   'Built-By': System.getProperty('user.name'),
+                   'Built-Date': new Date(),
+                   'Built-JDK': System.getProperty('java.version')
+    }
+}
+
+idea {
+    project {
+        jdkName = '1.6'
+
+        ipr.withXml { provider ->
+            def node = provider.asNode()
+
+            // Use GIT
+            def vcsConfig = node.component.find { it.'@name' == 'VcsDirectoryMappings' }
+            vcsConfig.mapping[0].'@vcs' = 'Git'
+
+            // Set Gradle home
+            def gradleSettings = node.appendNode('component', [name: 'GradleSettings'])
+            gradleSettings.appendNode('option', [name: 'SDK_HOME', value: gradle.gradleHomeDir])
+        }
+    }
+}
