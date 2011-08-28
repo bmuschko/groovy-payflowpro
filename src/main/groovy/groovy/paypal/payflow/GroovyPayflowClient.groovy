@@ -275,7 +275,7 @@ class GroovyPayflowClient implements PayflowClient {
 
         int withDelimiterIndex = name.indexOf(WITH_DELIMITER)
         String transactionName = withDelimiterIndex != -1 ? name.substring(0, withDelimiterIndex) : name
-        throw new IllegalArgumentException("Unknown Payflow transaction name: $transactionName")
+        throw new IllegalArgumentException("Unknown dynamic Payflow transaction name: $transactionName")
     }
 
     private Map prepareParameters(String dynamicMethodName, String name, args) {

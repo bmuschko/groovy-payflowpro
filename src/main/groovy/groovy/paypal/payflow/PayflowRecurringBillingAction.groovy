@@ -8,8 +8,8 @@ package groovy.paypal.payflow
  * To change this template use File | Settings | File Templates.
  */
 enum PayflowRecurringBillingAction {
-    ADD('A', 'addProfileWith'), MODIFY('M', 'modifyProfileWith'), REACTIVATE('R', 'reactiveProfileWith'),
-    CANCEL('C', 'cancelProfileWith'), INQUIRY('I', 'sendInquiryWith'), PAYMENT('P', 'retryProfilePaymentWith')
+    ADD('A', 'addProfileWith'), MODIFY('M', 'modifyProfileWith'), REACTIVATE('R', 'reactivateProfileWith'),
+    CANCEL('C', 'cancelProfileWith'), INQUIRY('I', 'sendProfileInquiryWith'), PAYMENT('P', 'retryProfilePaymentWith')
 
     final String action
     final String dynamicMethodName

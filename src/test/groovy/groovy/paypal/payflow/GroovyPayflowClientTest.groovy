@@ -449,6 +449,294 @@ class GroovyPayflowClientTest extends Specification {
             response.RESULT == '0'
     }
 
+    def "Add profile with Map parameters"() {
+        given: "an account"
+            PayflowAccount account = createAccount()
+
+        and: "extra parameters"
+            def extra = ['TENDER': 'C', 'ACCT': '4111111111111111', 'EXPDATE': '0114', 'AMT': '14.00']
+
+        and: "Payflow sends approved response"
+            def params = ['TRXTYPE': 'R', 'ACTION': 'A']
+            addAllParams(params, extra, createAccountMap())
+            HttpsSender mockHttpsSender = Mock()
+            client.httpsSender = mockHttpsSender
+            mockHttpsSender.sendPost(PayflowEnvironment.TEST.url, params) >> ['RESULT': '0']
+
+        when: "the account information is set"
+            client.useAccount(account)
+
+        and: "profile is added"
+            PayflowResponseMap response = client.addProfile(extra)
+
+        then: "the client should use the information as parameters and respond successfully"
+            response.size() == 1
+            response.RESULT == '0'
+    }
+
+    def "Add profile with dynamic parameters"() {
+        given: "an account"
+            PayflowAccount account = createAccount()
+
+        and: "Payflow sends approved response"
+            def params = ['TRXTYPE': 'R', 'ACTION': 'A']
+            def extra = ['TENDER': 'C', 'ACCT': '4111111111111111', 'EXPDATE': '0114', 'AMT': '14.00']
+            addAllParams(params, extra, createAccountMap())
+            HttpsSender mockHttpsSender = Mock()
+            client.httpsSender = mockHttpsSender
+            mockHttpsSender.sendPost(PayflowEnvironment.TEST.url, params) >> ['RESULT': '0']
+
+        when: "the account information is set"
+            client.useAccount(account)
+
+        and: "profile is added"
+            PayflowResponseMap response = client.addProfileWithTenderAndAcctAndExpdateAndAmt('C', '4111111111111111', '0114', 14.00)
+
+        then: "the client should use the information as parameters and respond successfully"
+            response.size() == 1
+            response.RESULT == '0'
+    }
+
+    def "Modify profile with Map parameters"() {
+        given: "an account"
+            PayflowAccount account = createAccount()
+
+        and: "extra parameters"
+            def extra = ['TENDER': 'C', 'ACCT': '4111111111111111', 'EXPDATE': '0114', 'AMT': '14.00']
+
+        and: "Payflow sends approved response"
+            def params = ['TRXTYPE': 'R', 'ACTION': 'M']
+            addAllParams(params, extra, createAccountMap())
+            HttpsSender mockHttpsSender = Mock()
+            client.httpsSender = mockHttpsSender
+            mockHttpsSender.sendPost(PayflowEnvironment.TEST.url, params) >> ['RESULT': '0']
+
+        when: "the account information is set"
+            client.useAccount(account)
+
+        and: "profile is modified"
+            PayflowResponseMap response = client.modifyProfile(extra)
+
+        then: "the client should use the information as parameters and respond successfully"
+            response.size() == 1
+            response.RESULT == '0'
+    }
+
+    def "Modify profile with dynamic parameters"() {
+        given: "an account"
+            PayflowAccount account = createAccount()
+
+        and: "Payflow sends approved response"
+            def params = ['TRXTYPE': 'R', 'ACTION': 'M']
+            def extra = ['TENDER': 'C', 'ACCT': '4111111111111111', 'EXPDATE': '0114', 'AMT': '14.00']
+            addAllParams(params, extra, createAccountMap())
+            HttpsSender mockHttpsSender = Mock()
+            client.httpsSender = mockHttpsSender
+            mockHttpsSender.sendPost(PayflowEnvironment.TEST.url, params) >> ['RESULT': '0']
+
+        when: "the account information is set"
+            client.useAccount(account)
+
+        and: "profile is modified"
+            PayflowResponseMap response = client.modifyProfileWithTenderAndAcctAndExpdateAndAmt('C', '4111111111111111', '0114', 14.00)
+
+        then: "the client should use the information as parameters and respond successfully"
+            response.size() == 1
+            response.RESULT == '0'
+    }
+
+    def "Reactivate profile with Map parameters"() {
+        given: "an account"
+            PayflowAccount account = createAccount()
+
+        and: "extra parameters"
+            def extra = ['TENDER': 'C', 'ACCT': '4111111111111111', 'EXPDATE': '0114', 'AMT': '14.00']
+
+        and: "Payflow sends approved response"
+            def params = ['TRXTYPE': 'R', 'ACTION': 'R']
+            addAllParams(params, extra, createAccountMap())
+            HttpsSender mockHttpsSender = Mock()
+            client.httpsSender = mockHttpsSender
+            mockHttpsSender.sendPost(PayflowEnvironment.TEST.url, params) >> ['RESULT': '0']
+
+        when: "the account information is set"
+            client.useAccount(account)
+
+        and: "profile is reactivated"
+            PayflowResponseMap response = client.reactivateProfile(extra)
+
+        then: "the client should use the information as parameters and respond successfully"
+            response.size() == 1
+            response.RESULT == '0'
+    }
+
+    def "Reactivate profile with dynamic parameters"() {
+        given: "an account"
+            PayflowAccount account = createAccount()
+
+        and: "Payflow sends approved response"
+            def params = ['TRXTYPE': 'R', 'ACTION': 'R']
+            def extra = ['TENDER': 'C', 'ACCT': '4111111111111111', 'EXPDATE': '0114', 'AMT': '14.00']
+            addAllParams(params, extra, createAccountMap())
+            HttpsSender mockHttpsSender = Mock()
+            client.httpsSender = mockHttpsSender
+            mockHttpsSender.sendPost(PayflowEnvironment.TEST.url, params) >> ['RESULT': '0']
+
+        when: "the account information is set"
+            client.useAccount(account)
+
+        and: "profile is reactivated"
+            PayflowResponseMap response = client.reactivateProfileWithTenderAndAcctAndExpdateAndAmt('C', '4111111111111111', '0114', 14.00)
+
+        then: "the client should use the information as parameters and respond successfully"
+            response.size() == 1
+            response.RESULT == '0'
+    }
+
+    def "Cancel profile with Map parameters"() {
+        given: "an account"
+            PayflowAccount account = createAccount()
+
+        and: "extra parameters"
+            def extra = ['TENDER': 'C', 'ACCT': '4111111111111111', 'EXPDATE': '0114', 'AMT': '14.00']
+
+        and: "Payflow sends approved response"
+            def params = ['TRXTYPE': 'R', 'ACTION': 'C']
+            addAllParams(params, extra, createAccountMap())
+            HttpsSender mockHttpsSender = Mock()
+            client.httpsSender = mockHttpsSender
+            mockHttpsSender.sendPost(PayflowEnvironment.TEST.url, params) >> ['RESULT': '0']
+
+        when: "the account information is set"
+            client.useAccount(account)
+
+        and: "profile is canceled"
+            PayflowResponseMap response = client.cancelProfile(extra)
+
+        then: "the client should use the information as parameters and respond successfully"
+            response.size() == 1
+            response.RESULT == '0'
+    }
+
+    def "Cancel profile with dynamic parameters"() {
+        given: "an account"
+            PayflowAccount account = createAccount()
+
+        and: "Payflow sends approved response"
+            def params = ['TRXTYPE': 'R', 'ACTION': 'C']
+            def extra = ['TENDER': 'C', 'ACCT': '4111111111111111', 'EXPDATE': '0114', 'AMT': '14.00']
+            addAllParams(params, extra, createAccountMap())
+            HttpsSender mockHttpsSender = Mock()
+            client.httpsSender = mockHttpsSender
+            mockHttpsSender.sendPost(PayflowEnvironment.TEST.url, params) >> ['RESULT': '0']
+
+        when: "the account information is set"
+            client.useAccount(account)
+
+        and: "profile is canceled"
+            PayflowResponseMap response = client.cancelProfileWithTenderAndAcctAndExpdateAndAmt('C', '4111111111111111', '0114', 14.00)
+
+        then: "the client should use the information as parameters and respond successfully"
+            response.size() == 1
+            response.RESULT == '0'
+    }
+
+    def "Send profile inquiry with Map parameters"() {
+        given: "an account"
+            PayflowAccount account = createAccount()
+
+        and: "extra parameters"
+            def extra = ['TENDER': 'C', 'ACCT': '4111111111111111', 'EXPDATE': '0114', 'AMT': '14.00']
+
+        and: "Payflow sends approved response"
+            def params = ['TRXTYPE': 'R', 'ACTION': 'I']
+            addAllParams(params, extra, createAccountMap())
+            HttpsSender mockHttpsSender = Mock()
+            client.httpsSender = mockHttpsSender
+            mockHttpsSender.sendPost(PayflowEnvironment.TEST.url, params) >> ['RESULT': '0']
+
+        when: "the account information is set"
+            client.useAccount(account)
+
+        and: "profile inquiry is sent"
+            PayflowResponseMap response = client.sendProfileInquiry(extra)
+
+        then: "the client should use the information as parameters and respond successfully"
+            response.size() == 1
+            response.RESULT == '0'
+    }
+
+    def "Send profile inquiry with dynamic parameters"() {
+        given: "an account"
+            PayflowAccount account = createAccount()
+
+        and: "Payflow sends approved response"
+            def params = ['TRXTYPE': 'R', 'ACTION': 'I']
+            def extra = ['TENDER': 'C', 'ACCT': '4111111111111111', 'EXPDATE': '0114', 'AMT': '14.00']
+            addAllParams(params, extra, createAccountMap())
+            HttpsSender mockHttpsSender = Mock()
+            client.httpsSender = mockHttpsSender
+            mockHttpsSender.sendPost(PayflowEnvironment.TEST.url, params) >> ['RESULT': '0']
+
+        when: "the account information is set"
+            client.useAccount(account)
+
+        and: "profile inquiry is sent"
+            PayflowResponseMap response = client.sendProfileInquiryWithTenderAndAcctAndExpdateAndAmt('C', '4111111111111111', '0114', 14.00)
+
+        then: "the client should use the information as parameters and respond successfully"
+            response.size() == 1
+            response.RESULT == '0'
+    }
+
+    def "Retry profile payment with Map parameters"() {
+        given: "an account"
+            PayflowAccount account = createAccount()
+
+        and: "extra parameters"
+            def extra = ['TENDER': 'C', 'ACCT': '4111111111111111', 'EXPDATE': '0114', 'AMT': '14.00']
+
+        and: "Payflow sends approved response"
+            def params = ['TRXTYPE': 'R', 'ACTION': 'P']
+            addAllParams(params, extra, createAccountMap())
+            HttpsSender mockHttpsSender = Mock()
+            client.httpsSender = mockHttpsSender
+            mockHttpsSender.sendPost(PayflowEnvironment.TEST.url, params) >> ['RESULT': '0']
+
+        when: "the account information is set"
+            client.useAccount(account)
+
+        and: "profile payment is retried"
+            PayflowResponseMap response = client.retryProfilePayment(extra)
+
+        then: "the client should use the information as parameters and respond successfully"
+            response.size() == 1
+            response.RESULT == '0'
+    }
+
+    def "Retry profile payment with dynamic parameters"() {
+        given: "an account"
+            PayflowAccount account = createAccount()
+
+        and: "Payflow sends approved response"
+            def params = ['TRXTYPE': 'R', 'ACTION': 'P']
+            def extra = ['TENDER': 'C', 'ACCT': '4111111111111111', 'EXPDATE': '0114', 'AMT': '14.00']
+            addAllParams(params, extra, createAccountMap())
+            HttpsSender mockHttpsSender = Mock()
+            client.httpsSender = mockHttpsSender
+            mockHttpsSender.sendPost(PayflowEnvironment.TEST.url, params) >> ['RESULT': '0']
+
+        when: "the account information is set"
+            client.useAccount(account)
+
+        and: "profile payment is retried"
+            PayflowResponseMap response = client.retryProfilePaymentWithTenderAndAcctAndExpdateAndAmt('C', '4111111111111111', '0114', 14.00)
+
+        then: "the client should use the information as parameters and respond successfully"
+            response.size() == 1
+            response.RESULT == '0'
+    }
+
     @FailsWith(IllegalArgumentException)
     def "Submit unknown transaction with dynamic parameters"() {
         given: "an account"
