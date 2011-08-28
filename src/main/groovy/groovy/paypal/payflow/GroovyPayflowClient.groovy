@@ -10,6 +10,7 @@ import groovy.paypal.payflow.response.PayflowResponseMap
  * To change this template use File | Settings | File Templates.
  */
 class GroovyPayflowClient implements PayflowClient {
+    static final String WITH_DELIMITER = 'With'
     static final String AND_DELIMITER = 'And'
     HttpsSender httpsSender
     PayflowEnvironment payflowEnvironment
@@ -89,8 +90,7 @@ class GroovyPayflowClient implements PayflowClient {
     }
 
     /**
-     * Submits a Voice Authorization transaction is a transaction that is authorized over the
-     * telephone from the processing network.
+     * Submits a Credit transaction that refunds the specified amount to the cardholder.
      *
      * @param extra Extra parameters
      * @return Response
@@ -246,7 +246,7 @@ class GroovyPayflowClient implements PayflowClient {
         }
         else if(name.startsWith(PayflowTransaction.REFERENCE_TRANSACTION.dynamicMethodName)) {
             Map params = prepareParameters(PayflowTransaction.REFERENCE_TRANSACTION.dynamicMethodName, name, args)
-            return submitInquiry(params)
+            return submitReferenceTransaction(params)
         }
         else if(name.startsWith(PayflowRecurringBillingAction.ADD.dynamicMethodName)) {
             Map params = prepareParameters(PayflowRecurringBillingAction.ADD.dynamicMethodName, name, args)
@@ -273,7 +273,9 @@ class GroovyPayflowClient implements PayflowClient {
             return retryProfilePayment(params)
         }
 
-        throw new IllegalArgumentException("Unknown Payflow transaction name: $name")
+        int withDelimiterIndex = name.indexOf(WITH_DELIMITER)
+        String transactionName = withDelimiterIndex != -1 ? name.substring(0, withDelimiterIndex) : name
+        throw new IllegalArgumentException("Unknown Payflow transaction name: $transactionName")
     }
 
     private Map prepareParameters(String dynamicMethodName, String name, args) {
@@ -281,10 +283,10 @@ class GroovyPayflowClient implements PayflowClient {
         String[] params = concatinatedParams != '' ? concatinatedParams.split(AND_DELIMITER) : new String[0]
 
         if(params.length < args.size()) {
-            throw new IllegalArgumentException('Less parameters provided than arguments')
+            throw new IllegalArgumentException('More parameters provided than arguments')
         }
         else if(params.length > args.size()) {
-            throw new IllegalArgumentException('More parameters provided than arguments')
+            throw new IllegalArgumentException('Less parameters provided than arguments')
         }
 
         def paramsAndValues = [:]
