@@ -11,12 +11,12 @@ repositories {
 }
 
 dependencies {
-    groovy 'org.codehaus.groovy:groovy-all:1.8.1'
+    groovy 'org.codehaus.groovy:groovy-all:1.7.10'
     compile 'org.codehaus.groovy.modules.http-builder:http-builder:0.5.1'
+    compile 'org.slf4j:slf4j-api:1.6.1'
+    compile 'org.slf4j:slf4j-log4j12:1.6.1'
     testCompile 'org.mockito:mockito-all:1.9.0-rc1'
-    testCompile 'org.slf4j:slf4j-api:1.6.1'
-    testCompile 'org.slf4j:slf4j-log4j12:1.6.1'
-    testCompile 'junit:junit:4.+'
+    testCompile 'org.spockframework:spock-core:0.5-groovy-1.7'
 }
 
 jar {
@@ -27,6 +27,14 @@ jar {
                    'Built-Date': new Date(),
                    'Built-JDK': System.getProperty('java.version')
     }
+}
+
+task integrationTest(type: Test) {
+   include '**/*IntegrationTest.*'
+}
+
+test {
+   exclude '**/*IntegrationTest.*'
 }
 
 idea {
