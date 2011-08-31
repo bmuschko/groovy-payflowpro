@@ -1,3 +1,18 @@
+/*
+ * Copyright 2011 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package groovy.paypal.payflow
 
 import groovy.paypal.payflow.util.ManifestUtils
@@ -8,11 +23,10 @@ import static groovyx.net.http.ContentType.URLENC
 import static groovyx.net.http.Method.POST
 
 /**
- * Created by IntelliJ IDEA.
- * User: Ben
- * Date: 8/20/11
- * Time: 7:39 AM
- * To change this template use File | Settings | File Templates.
+ * HTTP sender implementation that is targeted towards the Payflow API. It provides all necessary header attributes
+ * and converts the request parameters and the expected format.
+ *
+ * @author Benjamin Muschko
  */
 class PayflowHttpsSender implements HttpsSender {
     static final Logger log = LoggerFactory.getLogger(PayflowHttpsSender)
@@ -22,10 +36,16 @@ class PayflowHttpsSender implements HttpsSender {
 
     int timeout
     PayflowRequestIdStrategy payflowRequestIdStrategy
+    PayflowProxyServer proxyServer
 
     PayflowHttpsSender(int timeout, PayflowRequestIdStrategy payflowRequestIdStrategy) {
         this.timeout = timeout
         this.payflowRequestIdStrategy = payflowRequestIdStrategy
+    }
+
+    @Override
+    void setProxyServer(PayflowProxyServer proxyServer) {
+        this.proxyServer = proxyServer
     }
 
     @Override
@@ -40,6 +60,7 @@ class PayflowHttpsSender implements HttpsSender {
             headers.'X-VPS-Timeout' = timeout
             headers.'X-VPS-INTEGRATION-PRODUCT' = CLIENT_IDENTIFIER
 
+            // Use library version from manifest file
             if(ManifestUtils.version) {
                 headers.'X-VPS-INTEGRATION-VERSION' = ManifestUtils.version
             }
@@ -47,6 +68,17 @@ class PayflowHttpsSender implements HttpsSender {
             headers.'X-VPS-VIT-OS-NAME' = System.getProperty('os.name')
             headers.'Connection' = CONNECTION
             headers.'Content-Type' = CONTENT_TYPE
+
+            // Set proxy server if defined
+            if(proxyServer) {
+                headers.'PROXYADDRESS' = proxyServer.address
+                headers.'PROXYPORT' = proxyServer.port
+
+                if(proxyServer.logonId) {
+                    headers.'PROXYLOGON' = proxyServer.logonId
+                    headers.'PROXYPASSWORD' = proxyServer.password
+                }
+            }
 
             log.debug "Request headers: $headers"
             body = createRequestBodyFromParams(params)

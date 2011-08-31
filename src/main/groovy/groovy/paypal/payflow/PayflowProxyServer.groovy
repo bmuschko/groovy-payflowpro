@@ -16,13 +16,13 @@
 package groovy.paypal.payflow
 
 /**
- * Payflow request ID generation strategy that uses a random UUID.
+ * Proxy server for usage with HTTPS client.
  *
  * @author Benjamin Muschko
  */
-class UUIDPayflowRequestIdStrategy implements PayflowRequestIdStrategy {
-    @Override
-    String getRequestId() {
-        UUID.randomUUID()
-    }
+class PayflowProxyServer {
+    String address
+    Integer port
+    String logonId
+    String password
 }

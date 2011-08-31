@@ -1,13 +1,26 @@
+/*
+ * Copyright 2011 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package groovy.paypal.payflow
 
 import groovy.paypal.payflow.response.PayflowResponseMap
 
 /**
- * Created by IntelliJ IDEA.
- * User: Ben
- * Date: 8/20/11
- * Time: 9:34 AM
- * To change this template use File | Settings | File Templates.
+ * Groovy client that provides an API and DSL for sumitting Payflow transactions.
+ *
+ * @author Benjamin Muschko
  */
 class GroovyPayflowClient implements PayflowClient {
     static final String WITH_DELIMITER = 'With'
@@ -36,6 +49,11 @@ class GroovyPayflowClient implements PayflowClient {
         accountParams.put('VENDOR', account.vendor)
         accountParams.put('USER', account.username)
         accountParams.put('PWD', account.password)
+        this
+    }
+
+    GroovyPayflowClient useProxyServer(PayflowProxyServer proxyServer) {
+        httpsSender.proxyServer = proxyServer
         this
     }
 
