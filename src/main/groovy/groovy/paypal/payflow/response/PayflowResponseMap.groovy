@@ -35,7 +35,23 @@ class PayflowResponseMap implements Map {
     @Override
     Object asType(Class type) {
         if(type == PayflowResponse) {
-            return new PayflowResponse(result: inner.RESULT.toInteger(), responseMessage: inner.RESPMSG, pnRef: inner.PNREF, authCode: inner.AUTHCODE)
+            return new PayflowResponse(pnref: inner.PNREF, ppref: inner.PPREF, result: inner.RESULT?.toInteger(), cvv2Match: inner.CVV2MATCH,
+                                       respMsg: inner.RESPMSG, authCode: inner.AUTHCODE, correlationId: inner.CORRELATIONID,
+                                       balamt: inner.BALAMT, cardSecure: inner.CARDSECURE)
+        }
+        else if(type == PayflowVerbosityResponse) {
+            return new PayflowVerbosityResponse(hostCode: inner.HOSTCODE, respText: inner.RESPTEXT, procCvv2: inner.PROCCVV2,
+                                                procCardSecure: inner.PROCCARDSECURE, addLmnsgs: inner.ADDLMSGS, transState: inner.TRANSSTATE?.toInteger(),
+                                                dateToSettle: parseDate(inner.DATE_TO_SETTLE), batchId: inner.BATCHID?.toInteger(),
+                                                settleDate: parseDate(inner.SETTLE_DATE), amexId: inner.AMEXID, amexPosData: inner.AMEXPOSDATA)
+        }
+        else if(type == PayflowAddressVerificationResponse) {
+            return new PayflowAddressVerificationResponse(avsAddr: inner.AVSADDR, avsZip: inner.AVSZIP, iavs: inner.IAVS,
+                                                          procAvs: inner.PROCAVS)
+        }
+        else if(type == PayflowProfileResponse) {
+            return new PayflowProfileResponse(profileId: inner.PROFILEID, rpref: inner.rpref, trxPnref: inner.trxPnref,
+                                              trxResult: inner.TRXRESULT?.toInteger(), trxRespmsg: inner.TRXRESPMSG)
         }
 
         DefaultGroovyMethods.asType(inner, type)
@@ -43,5 +59,9 @@ class PayflowResponseMap implements Map {
 
     boolean isApproved() {
         inner.containsKey('RESULT') ? inner.RESULT.toInteger() == 0 : false
+    }
+
+    private Date parseDate(String value) {
+        value ?: Date.parse('yyyy-MM-dd HH:mm:ss', value)
     }
 }

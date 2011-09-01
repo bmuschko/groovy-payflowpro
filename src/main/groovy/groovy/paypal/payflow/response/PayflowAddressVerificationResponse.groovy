@@ -21,8 +21,18 @@ package groovy.paypal.payflow.response
  * @author Benjamin Muschko
  */
 class PayflowAddressVerificationResponse {
-    String avsaddr
-    String avszip
+    String avsAddr
+    String avsZip
     String iavs
-    String procavs
+    String procAvs
+
+    @Override
+    String toString ( ) {
+        "PayflowAddressVerificationResponse{" +
+        "avsAddr='" + avsAddr + '\'' +
+        ", avsZip='" + avsZip + '\'' +
+        ", iavs='" + iavs + '\'' +
+        ", procAvs='" + procAvs + '\'' +
+        '}'
+    }
 }

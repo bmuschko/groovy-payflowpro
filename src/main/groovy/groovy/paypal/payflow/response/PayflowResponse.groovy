@@ -21,22 +21,32 @@ package groovy.paypal.payflow.response
  * @author Benjamin Muschko
  */
 class PayflowResponse {
+    String pnref
+    String ppref
     Integer result
-    String responseMessage
-    String pnRef
+    String cvv2Match
+    String respMsg
     String authCode
+    String correlationId
+    String balamt
+    String cardSecure
 
     boolean isApproved() {
-        result && result == 0
+        result != null && result == 0
     }
 
     @Override
     String toString() {
         "PayflowResponse{" +
-        "result=" + result +
-        ", responseMessage='" + responseMessage + '\'' +
-        ", pnRef='" + pnRef + '\'' +
+        "pnref='" + pnref + '\'' +
+        ", ppref='" + ppref + '\'' +
+        ", result=" + result +
+        ", cvv2Match='" + cvv2Match + '\'' +
+        ", respMsg='" + respMsg + '\'' +
         ", authCode='" + authCode + '\'' +
+        ", correlationId='" + correlationId + '\'' +
+        ", balamt='" + balamt + '\'' +
+        ", cardSecure='" + cardSecure + '\'' +
         '}'
     }
 }

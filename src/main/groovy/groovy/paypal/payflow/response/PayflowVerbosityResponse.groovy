@@ -20,9 +20,9 @@ package groovy.paypal.payflow.response
  *
  * @author Benjamin Muschko
  */
-class PayflowMediumVerbosityResponse {
+class PayflowVerbosityResponse {
     String hostCode
-    String responseText
+    String respText
     String procAvs
     String procCvv2
     String procCardSecure
@@ -34,4 +34,23 @@ class PayflowMediumVerbosityResponse {
     String amexId
     String amexPosData
     String visaCardLevel
+
+    @Override
+    String toString() {
+        "PayflowVerbosityResponse{" +
+        "hostCode='" + hostCode + '\'' +
+        ", respText='" + respText + '\'' +
+        ", procAvs='" + procAvs + '\'' +
+        ", procCvv2='" + procCvv2 + '\'' +
+        ", procCardSecure='" + procCardSecure + '\'' +
+        ", addLmnsgs='" + addLmnsgs + '\'' +
+        ", transState=" + transState +
+        ", dateToSettle=" + dateToSettle +
+        ", batchId=" + batchId +
+        ", settleDate=" + settleDate +
+        ", amexId='" + amexId + '\'' +
+        ", amexPosData='" + amexPosData + '\'' +
+        ", visaCardLevel='" + visaCardLevel + '\'' +
+        '}'
+    }
 }

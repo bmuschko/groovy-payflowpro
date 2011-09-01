@@ -23,7 +23,18 @@ package groovy.paypal.payflow.response
 class PayflowProfileResponse {
     String profileId
     String rpref
-    String trxpnref
-    String trxresult
-    String trxrespmsg
+    String trxPnref
+    Integer trxResult
+    String trxRespmsg
+
+    @Override
+    String toString() {
+        "PayflowProfileResponse{" +
+        "profileId='" + profileId + '\'' +
+        ", rpref='" + rpref + '\'' +
+        ", trxPnref='" + trxPnref + '\'' +
+        ", trxResult=" + trxResult +
+        ", trxRespmsg='" + trxRespmsg + '\'' +
+        '}'
+    }
 }
