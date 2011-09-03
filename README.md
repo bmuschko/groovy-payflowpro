@@ -47,8 +47,8 @@ request ID generation strategy requires you to implement the interface `groovy.p
     // Setting a new timeout and custom request ID directly on the fields
     client.httpsSender.timeout = 300
     client.httpsSender.payflowRequestIdStrategy = new CustomPayflowRequestIdStrategy()
-
-
+<br>
+<br>
 ### Parameterizing the client
 
 By default the client uses the testing environment `pilot-payflowpro.paypal.com`. You can easily switch between testing
