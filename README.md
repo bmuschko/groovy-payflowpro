@@ -48,7 +48,6 @@ request ID generation strategy requires you to implement the interface `groovy.p
     client.httpsSender.timeout = 300
     client.httpsSender.payflowRequestIdStrategy = new CustomPayflowRequestIdStrategy()
 <br>
-<br>
 ### Parameterizing the client
 
 By default the client uses the testing environment `pilot-payflowpro.paypal.com`. You can easily switch between testing
@@ -62,8 +61,7 @@ either preset an account or define it yourself for each transaction as request p
 
     // Operations can be chained in any kind of order
     GroovyPayflowClient client = new GroovyPayflowClient().withLive().withProxyServer(proxyServer).useAccount(account)
-
-
+<br>
 ### Submitting a transaction
 
 There are two ways you can submit a transaction. The default way is to call the transaction method and provide the request
@@ -80,8 +78,7 @@ of arguments you can use is not limited.
 
     // Dynamic definition of submitting a sale transaction
     def response = client.submitSaleWithTenderAndAcctAndExpdateAndAmt('C', 4111111111111111, '0114', 14.00)
-
-
+<br>
 ### Using the response
 
 In both ways the response is a specialized `Map` of type `groovy.paypal.payflow.response.PayflowResponseMap`. If you'd rather
