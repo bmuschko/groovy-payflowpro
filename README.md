@@ -1,9 +1,9 @@
 # Groovy client for PayPal Payflow Pro API
 
-This library provides an low-level interface and DSL to the PayPal Payflow Pro API (HTTPS interface). This library
+This library provides a low-level interface and DSL to the PayPal Payflow Pro API (HTTPS interface). This library
 is not a replacement for the [Java SDK](https://cms.paypal.com/us/cgi-bin/?cmd=_render-content&content_ID=developer/library_download_sdks#PayflowPro).
 It aims for giving you full control over all request and response parameters but also provides great flexiblity on how to
-express your transaction in a natural language. The required HTTPS communication with Payflow is hidden but configurable.
+express your transaction in a natural language. The required HTTPS communication with the Payflow API is hidden but configurable.
 
 __Supported Transactions__
 
@@ -26,7 +26,7 @@ __Recurring Billing__
 
 ## Usage
 
-You can use the API by cresting an instance of the class `groovy.paypal.payflow.GroovyPayflowClient`. If required
+You can use the API by creating an instance of the class `groovy.paypal.payflow.GroovyPayflowClient`. If required
 you can set a new timeout for the HTTPS communication and the strategy for providing the request ID via the constructor or
 directly on the fields. The default timeout is 45 seconds, the default request ID generation strategy is a random UUID. The
 request ID generation strategy requires you to implement the interface `groovy.paypal.payflow.PayflowRequestIdStrategy`.
@@ -48,12 +48,13 @@ request ID generation strategy requires you to implement the interface `groovy.p
     client.httpsSender.timeout = 300
     client.httpsSender.payflowRequestIdStrategy = new CustomPayflowRequestIdStrategy()
 
+
 ### Parameterizing the client
 
 By default the client uses the testing environment `pilot-payflowpro.paypal.com`. You can easily switch between testing
-and live environment using the methods `withTest()` and `withLive()`. If your network infrastructure requires you to use
+and live environment by invoking the methods `withTest()` and `withLive()`. If your network infrastructure requires you to use
 a proxy server you can define that as well. Usually you will want to use a specific account for your transactions. You can
-preset an account or define it yourself for each transaction as request parameters. All of these operations can be chained.
+either preset an account or define it yourself for each transaction as request parameters. All of these operations can be chained.
 
     // Provide proxy server and account information
     def proxyServer = new PayflowProxyServer(address: 'internal.proxy.com', port: '54603', logonId: 'internal', password: 'secret')
@@ -61,6 +62,7 @@ preset an account or define it yourself for each transaction as request paramete
 
     // Operations can be chained in any kind of order
     GroovyPayflowClient client = new GroovyPayflowClient().withLive().withProxyServer(proxyServer).useAccount(account)
+
 
 ### Submitting a transaction
 
@@ -72,22 +74,27 @@ parameters as a `Map`. The key corresponds to the parameter name in the document
     def response = client.submitSale(params)
 
 Alternatively you can use a dynamic transaction method and provide the parameter values as a list. A dynamic transaction method
-always appends the keyword _With_. Arguments are concatinated by the keyword _And_. The arguments can be defined
+name always appends the keyword _With_. Arguments are concatinated by the keyword _And_. Each of the arguments can be defined
 in upper or lower case. For a better readability you should capitalize the first letter of each argument name. The number
 of arguments you can use is not limited.
 
     // Dynamic definition of submitting a sale transaction
     def response = client.submitSaleWithTenderAndAcctAndExpdateAndAmt('C', 4111111111111111, '0114', 14.00)
 
+
+### Using the response
+
 In both ways the response is a specialized `Map` of type `groovy.paypal.payflow.response.PayflowResponseMap`. If you'd rather
 like to work with an object you can manually cast the `Map` to a response object using the `asType` operator. A response
 object also provides the correct data type.
 
+    // Using the response as Map
     if(response.approved) {
         assert response.RESPMSG == 'Approved'
         println "Transaction reference identifier: $response.PNREF"
     }
 
+    // Casting the Map to a response object
     def payflowResponse = response as PayflowResponse
 
     if(payflowResponse.approved) {
