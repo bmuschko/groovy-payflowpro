@@ -35,12 +35,12 @@ class PayflowHttpsSender implements HttpsSender {
     static final String CONTENT_TYPE = 'text/namevalue'
 
     int timeout
-    PayflowRequestIdStrategy payflowRequestIdStrategy
+    PayflowRequestIdStrategy requestIdStrategy
     PayflowProxyServer proxyServer
 
-    PayflowHttpsSender(int timeout, PayflowRequestIdStrategy payflowRequestIdStrategy) {
+    PayflowHttpsSender(int timeout, PayflowRequestIdStrategy requestIdStrategy) {
         this.timeout = timeout
-        this.payflowRequestIdStrategy = payflowRequestIdStrategy
+        this.requestIdStrategy = requestIdStrategy
     }
 
     @Override
@@ -55,7 +55,7 @@ class PayflowHttpsSender implements HttpsSender {
 
         httpBuilder.request(POST) {
             requestContentType = URLENC
-            headers.'X-VPS-REQUEST-ID' = payflowRequestIdStrategy.getRequestId()
+            headers.'X-VPS-REQUEST-ID' = requestIdStrategy.getRequestId()
             headers.'X-VPS-CLIENT-TIMEOUT' = timeout
             headers.'X-VPS-Timeout' = timeout
             headers.'X-VPS-INTEGRATION-PRODUCT' = CLIENT_IDENTIFIER

@@ -20,56 +20,73 @@ import spock.lang.FailsWith
 import spock.lang.Specification
 
 /**
- * Created by IntelliJ IDEA.
- * User: Ben
- * Date: 8/28/11
- * Time: 9:44 AM
- * To change this template use File | Settings | File Templates.
+ * Groovy Payflow client tests.
+ *
+ * @author Benjamin Muschko
  */
 class GroovyPayflowClientTest extends Specification {
-    GroovyPayflowClient client
-
-    def setup() {
-        client = new GroovyPayflowClient()
-    }
-
-    def cleanup() {
-        client = null
-    }
-
-    def "Create client"() {
-        when: "the Payflow client is created"
-            client.withTest()
+    def "Create client with default configuration"() {
+        when: "the client is created"
+            GroovyPayflowClient client = new GroovyPayflowClient()
 
         then: "the HTTPS sender should be set up the environment should be set to test"
             client.httpsSender != null
             client.httpsSender.timeout == 45
-            client.httpsSender.payflowRequestIdStrategy != null
-            client.httpsSender.payflowRequestIdStrategy instanceof UUIDPayflowRequestIdStrategy
-            client.payflowEnvironment == PayflowEnvironment.TEST
+            client.httpsSender.requestIdStrategy != null
+            client.httpsSender.requestIdStrategy instanceof UUIDPayflowRequestIdStrategy
+            client.environment == PayflowEnvironment.TEST
+    }
+
+    def "Configure client with configuation file"() {
+        when: "the client is created"
+            GroovyPayflowClient client = new GroovyPayflowClient('GroovyPayflowConfig7')
+
+        then: "the configuration is set"
+            client.httpsSender.timeout == 56
+            client.httpsSender.requestIdStrategy instanceof UUIDPayflowRequestIdStrategy
+            client.environment == PayflowEnvironment.LIVE
+            client.accountParams.size() == 4
+            client.accountParams.'PARTNER' == 'Paypal'
+            client.accountParams.'VENDOR' == 'External'
+            client.accountParams.'USER' == 'foo'
+            client.accountParams.'PWD' == 'bar'
+            client.httpsSender.proxyServer != null
+            client.httpsSender.proxyServer.address == 'internal.server'
+            client.httpsSender.proxyServer.port == 9999
+            client.httpsSender.proxyServer.logonId == 'proxyLogon'
+            client.httpsSender.proxyServer.password == 's3cr3t'
     }
 
     def "Set Payflow test environment"() {
+        given: "the client is created"
+            GroovyPayflowClient client = new GroovyPayflowClient()
+
         when: "the Payflow environment is set to test"
             client.withTest()
 
         then: "the environment should be test"
-            client.payflowEnvironment == PayflowEnvironment.TEST
+            client.environment == PayflowEnvironment.TEST
     }
 
     def "Set Payflow live environment"() {
+        given: "the client is created"
+            GroovyPayflowClient client = new GroovyPayflowClient()
+
         when: "the Payflow environment is set to live"
             client.withLive()
 
         then: "the environment should be live"
-            client.payflowEnvironment == PayflowEnvironment.LIVE
+            client.environment == PayflowEnvironment.LIVE
     }
 
     def "Use account information"() {
-        given: "an account"
+        given: "the client is created"
+            GroovyPayflowClient client = new GroovyPayflowClient()
+
+        when: "an account"
             PayflowAccount account = createAccount()
 
-        when: "the account information is set"
+        and: "the account information is set"
             client.useAccount(account)
 
         then: "the client should use the information as parameters"
@@ -80,8 +97,29 @@ class GroovyPayflowClientTest extends Specification {
             client.accountParams.PWD == 'password'
     }
 
+    def "Use proxy server"() {
+        given: "the client is created"
+            GroovyPayflowClient client = new GroovyPayflowClient()
+
+        and: "a proxy server"
+            PayflowProxyServer proxyServer = createProxyServer()
+
+        when: "the proxy server is set"
+            client.useProxyServer(proxyServer)
+
+        then: "the HTTPS client should use the proxy server"
+            client.httpsSender.proxyServer != null
+            client.httpsSender.proxyServer.address == 'proxy.internal'
+            client.httpsSender.proxyServer.port == 9999
+            client.httpsSender.proxyServer.logonId == 'proxyUser'
+            client.httpsSender.proxyServer.password == 's3cr3t'
+    }
+
     def "Submit sale with Map parameters"() {
-        given: "an account"
+        given: "the client is created"
+            GroovyPayflowClient client = new GroovyPayflowClient()
+
+        and: "an account"
             PayflowAccount account = createAccount()
 
         and: "extra parameters"
@@ -106,7 +144,10 @@ class GroovyPayflowClientTest extends Specification {
     }
 
     def "Submit sale with dynamic parameters"() {
-        given: "an account"
+        given: "the client is created"
+            GroovyPayflowClient client = new GroovyPayflowClient()
+
+        and: "an account"
             PayflowAccount account = createAccount()
 
         and: "Payflow sends approved response"
@@ -129,7 +170,10 @@ class GroovyPayflowClientTest extends Specification {
     }
 
     def "Submit authorization with Map parameters"() {
-        given: "an account"
+        given: "the client is created"
+            GroovyPayflowClient client = new GroovyPayflowClient()
+
+        and: "an account"
             PayflowAccount account = createAccount()
 
         and: "extra parameters"
@@ -154,7 +198,10 @@ class GroovyPayflowClientTest extends Specification {
     }
 
     def "Submit authorization with dynamic parameters"() {
-        given: "an account"
+        given: "the client is created"
+            GroovyPayflowClient client = new GroovyPayflowClient()
+
+        and: "an account"
             PayflowAccount account = createAccount()
 
         and: "Payflow sends approved response"
@@ -177,7 +224,10 @@ class GroovyPayflowClientTest extends Specification {
     }
 
     def "Submit delayed capture with Map parameters"() {
-        given: "an account"
+        given: "the client is created"
+            GroovyPayflowClient client = new GroovyPayflowClient()
+
+        and: "an account"
             PayflowAccount account = createAccount()
 
         and: "extra parameters"
@@ -202,7 +252,10 @@ class GroovyPayflowClientTest extends Specification {
     }
 
     def "Submit delayed capture with dynamic parameters"() {
-        given: "an account"
+        given: "the client is created"
+            GroovyPayflowClient client = new GroovyPayflowClient()
+
+        and: "an account"
             PayflowAccount account = createAccount()
 
         and: "Payflow sends approved response"
@@ -225,7 +278,10 @@ class GroovyPayflowClientTest extends Specification {
     }
 
     def "Submit voice authorization with Map parameters"() {
-        given: "an account"
+        given: "the client is created"
+            GroovyPayflowClient client = new GroovyPayflowClient()
+
+        and: "an account"
             PayflowAccount account = createAccount()
 
         and: "extra parameters"
@@ -250,7 +306,10 @@ class GroovyPayflowClientTest extends Specification {
     }
 
     def "Submit voice authorization with dynamic parameters"() {
-        given: "an account"
+        given: "the client is created"
+            GroovyPayflowClient client = new GroovyPayflowClient()
+
+        and: "an account"
             PayflowAccount account = createAccount()
 
         and: "Payflow sends approved response"
@@ -273,7 +332,10 @@ class GroovyPayflowClientTest extends Specification {
     }
 
     def "Submit credit with Map parameters"() {
-        given: "an account"
+        given: "the client is created"
+            GroovyPayflowClient client = new GroovyPayflowClient()
+
+        and: "an account"
             PayflowAccount account = createAccount()
 
         and: "extra parameters"
@@ -298,7 +360,10 @@ class GroovyPayflowClientTest extends Specification {
     }
 
     def "Submit credit with dynamic parameters"() {
-        given: "an account"
+        given: "the client is created"
+            GroovyPayflowClient client = new GroovyPayflowClient()
+
+        and: "an account"
             PayflowAccount account = createAccount()
 
         and: "Payflow sends approved response"
@@ -321,7 +386,10 @@ class GroovyPayflowClientTest extends Specification {
     }
 
     def "Submit void with Map parameters"() {
-        given: "an account"
+        given: "the client is created"
+            GroovyPayflowClient client = new GroovyPayflowClient()
+
+        and: "an account"
             PayflowAccount account = createAccount()
 
         and: "extra parameters"
@@ -346,7 +414,10 @@ class GroovyPayflowClientTest extends Specification {
     }
 
     def "Submit void with dynamic parameters"() {
-        given: "an account"
+        given: "the client is created"
+            GroovyPayflowClient client = new GroovyPayflowClient()
+
+        and: "an account"
             PayflowAccount account = createAccount()
 
         and: "Payflow sends approved response"
@@ -369,7 +440,10 @@ class GroovyPayflowClientTest extends Specification {
     }
 
     def "Submit inquiry with Map parameters"() {
-        given: "an account"
+        given: "the client is created"
+            GroovyPayflowClient client = new GroovyPayflowClient()
+
+        and: "an account"
             PayflowAccount account = createAccount()
 
         and: "extra parameters"
@@ -394,7 +468,10 @@ class GroovyPayflowClientTest extends Specification {
     }
 
     def "Submit inquiry with dynamic parameters"() {
-        given: "an account"
+        given: "the client is created"
+            GroovyPayflowClient client = new GroovyPayflowClient()
+
+        and: "an account"
             PayflowAccount account = createAccount()
 
         and: "Payflow sends approved response"
@@ -417,7 +494,10 @@ class GroovyPayflowClientTest extends Specification {
     }
 
     def "Submit reference transaction with Map parameters"() {
-        given: "an account"
+        given: "the client is created"
+            GroovyPayflowClient client = new GroovyPayflowClient()
+
+        and: "an account"
             PayflowAccount account = createAccount()
 
         and: "extra parameters"
@@ -442,7 +522,10 @@ class GroovyPayflowClientTest extends Specification {
     }
 
     def "Submit reference transaction with dynamic parameters"() {
-        given: "an account"
+        given: "the client is created"
+            GroovyPayflowClient client = new GroovyPayflowClient()
+
+        and: "an account"
             PayflowAccount account = createAccount()
 
         and: "Payflow sends approved response"
@@ -465,7 +548,10 @@ class GroovyPayflowClientTest extends Specification {
     }
 
     def "Add profile with Map parameters"() {
-        given: "an account"
+        given: "the client is created"
+            GroovyPayflowClient client = new GroovyPayflowClient()
+
+        and: "an account"
             PayflowAccount account = createAccount()
 
         and: "extra parameters"
@@ -490,7 +576,10 @@ class GroovyPayflowClientTest extends Specification {
     }
 
     def "Add profile with dynamic parameters"() {
-        given: "an account"
+        given: "the client is created"
+            GroovyPayflowClient client = new GroovyPayflowClient()
+
+        and: "an account"
             PayflowAccount account = createAccount()
 
         and: "Payflow sends approved response"
@@ -513,7 +602,10 @@ class GroovyPayflowClientTest extends Specification {
     }
 
     def "Modify profile with Map parameters"() {
-        given: "an account"
+        given: "the client is created"
+            GroovyPayflowClient client = new GroovyPayflowClient()
+
+        and: "an account"
             PayflowAccount account = createAccount()
 
         and: "extra parameters"
@@ -538,7 +630,10 @@ class GroovyPayflowClientTest extends Specification {
     }
 
     def "Modify profile with dynamic parameters"() {
-        given: "an account"
+        given: "the client is created"
+            GroovyPayflowClient client = new GroovyPayflowClient()
+
+        and: "an account"
             PayflowAccount account = createAccount()
 
         and: "Payflow sends approved response"
@@ -561,7 +656,10 @@ class GroovyPayflowClientTest extends Specification {
     }
 
     def "Reactivate profile with Map parameters"() {
-        given: "an account"
+        given: "the client is created"
+            GroovyPayflowClient client = new GroovyPayflowClient()
+
+        and: "an account"
             PayflowAccount account = createAccount()
 
         and: "extra parameters"
@@ -586,7 +684,10 @@ class GroovyPayflowClientTest extends Specification {
     }
 
     def "Reactivate profile with dynamic parameters"() {
-        given: "an account"
+        given: "the client is created"
+            GroovyPayflowClient client = new GroovyPayflowClient()
+
+        and: "an account"
             PayflowAccount account = createAccount()
 
         and: "Payflow sends approved response"
@@ -609,7 +710,10 @@ class GroovyPayflowClientTest extends Specification {
     }
 
     def "Cancel profile with Map parameters"() {
-        given: "an account"
+        given: "the client is created"
+            GroovyPayflowClient client = new GroovyPayflowClient()
+
+        and: "an account"
             PayflowAccount account = createAccount()
 
         and: "extra parameters"
@@ -634,7 +738,10 @@ class GroovyPayflowClientTest extends Specification {
     }
 
     def "Cancel profile with dynamic parameters"() {
-        given: "an account"
+        given: "the client is created"
+            GroovyPayflowClient client = new GroovyPayflowClient()
+
+        and: "an account"
             PayflowAccount account = createAccount()
 
         and: "Payflow sends approved response"
@@ -657,7 +764,10 @@ class GroovyPayflowClientTest extends Specification {
     }
 
     def "Send profile inquiry with Map parameters"() {
-        given: "an account"
+        given: "the client is created"
+            GroovyPayflowClient client = new GroovyPayflowClient()
+
+        and: "an account"
             PayflowAccount account = createAccount()
 
         and: "extra parameters"
@@ -682,7 +792,10 @@ class GroovyPayflowClientTest extends Specification {
     }
 
     def "Send profile inquiry with dynamic parameters"() {
-        given: "an account"
+        given: "the client is created"
+            GroovyPayflowClient client = new GroovyPayflowClient()
+
+        and: "an account"
             PayflowAccount account = createAccount()
 
         and: "Payflow sends approved response"
@@ -705,7 +818,10 @@ class GroovyPayflowClientTest extends Specification {
     }
 
     def "Retry profile payment with Map parameters"() {
-        given: "an account"
+        given: "the client is created"
+            GroovyPayflowClient client = new GroovyPayflowClient()
+
+        and: "an account"
             PayflowAccount account = createAccount()
 
         and: "extra parameters"
@@ -730,7 +846,10 @@ class GroovyPayflowClientTest extends Specification {
     }
 
     def "Retry profile payment with dynamic parameters"() {
-        given: "an account"
+        given: "the client is created"
+            GroovyPayflowClient client = new GroovyPayflowClient()
+
+        and: "an account"
             PayflowAccount account = createAccount()
 
         and: "Payflow sends approved response"
@@ -754,7 +873,10 @@ class GroovyPayflowClientTest extends Specification {
 
     @FailsWith(IllegalArgumentException)
     def "Submit unknown transaction with dynamic parameters"() {
-        given: "an account"
+        given: "the client is created"
+            GroovyPayflowClient client = new GroovyPayflowClient()
+
+        and: "an account"
             PayflowAccount account = createAccount()
 
         and: "Payflow sends approved response"
@@ -776,7 +898,10 @@ class GroovyPayflowClientTest extends Specification {
 
     @FailsWith(IllegalArgumentException)
     def "Submit transaction with dynamic parameters but less arguments than parameters"() {
-        given: "an account"
+        given: "the client is created"
+            GroovyPayflowClient client = new GroovyPayflowClient()
+
+        and: "an account"
             PayflowAccount account = createAccount()
 
         when: "the account information is set"
@@ -790,7 +915,10 @@ class GroovyPayflowClientTest extends Specification {
 
     @FailsWith(IllegalArgumentException)
     def "Submit transaction with dynamic parameters but less parameters than arguments"() {
-        given: "an account"
+        given: "the client is created"
+            GroovyPayflowClient client = new GroovyPayflowClient()
+
+        and: "an account"
             PayflowAccount account = createAccount()
 
         when: "the account information is set"
@@ -804,6 +932,10 @@ class GroovyPayflowClientTest extends Specification {
 
     private PayflowAccount createAccount() {
         new PayflowAccount(partner: 'partner', vendor: 'vendor', username: 'username', password: 'password')
+    }
+
+    private PayflowProxyServer createProxyServer() {
+        new PayflowProxyServer(address: 'proxy.internal', port: 9999, logonId: 'proxyUser', password: 's3cr3t')
     }
 
     private Map createAccountMap() {

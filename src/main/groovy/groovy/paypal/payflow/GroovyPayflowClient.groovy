@@ -15,6 +15,8 @@
  */
 package groovy.paypal.payflow
 
+import groovy.paypal.payflow.config.PayflowClientConfiguration
+import groovy.paypal.payflow.config.PayflowConfigurationReader
 import groovy.paypal.payflow.response.PayflowResponseMap
 
 /**
@@ -26,21 +28,39 @@ class GroovyPayflowClient implements PayflowClient {
     static final String WITH_DELIMITER = 'With'
     static final String AND_DELIMITER = 'And'
     HttpsSender httpsSender
-    PayflowEnvironment payflowEnvironment
+    PayflowEnvironment environment
     def accountParams = [:]
 
-    GroovyPayflowClient(int timeout = 45, PayflowRequestIdStrategy payflowRequestIdStrategy = new UUIDPayflowRequestIdStrategy()) {
-        httpsSender = new PayflowHttpsSender(timeout, payflowRequestIdStrategy)
-        withTest()
+    GroovyPayflowClient(String configClass = PayflowConfigurationReader.CONFIG_CLASS) {
+        configureClient(configClass)
+    }
+
+    private void configureClient(String configClass) {
+        PayflowClientConfiguration configuration = resolveConfiguration(configClass)
+        httpsSender = new PayflowHttpsSender(configuration.timeout, configuration.requestIdStrategy)
+        environment = configuration.environment
+
+        if(configuration.account) {
+            useAccount(configuration.account)
+        }
+
+        if(configuration.proxyServer) {
+            useProxyServer(configuration.proxyServer)
+        }
+    }
+
+    private PayflowClientConfiguration resolveConfiguration(String configClass) {
+        PayflowClientConfiguration configuration = new PayflowConfigurationReader().parseConfig(configClass)
+        configuration ?: new PayflowClientConfiguration()
     }
 
     GroovyPayflowClient withTest() {
-        payflowEnvironment = PayflowEnvironment.TEST
+        environment = PayflowEnvironment.TEST
         this
     }
 
     GroovyPayflowClient withLive() {
-        payflowEnvironment = PayflowEnvironment.LIVE
+        environment = PayflowEnvironment.LIVE
         this
     }
 
@@ -223,14 +243,14 @@ class GroovyPayflowClient implements PayflowClient {
         def params = transactionType ? ['TRXTYPE': transactionType] : [:]
         params.putAll(extra)
         params.putAll(accountParams)
-        new PayflowResponseMap(httpsSender.sendPost(payflowEnvironment.url, params))
+        new PayflowResponseMap(httpsSender.sendPost(environment.url, params))
     }
 
     private PayflowResponseMap sendRecurringProfileRequestToPayflow(String action, Map extra) {
         def params = ['TRXTYPE': 'R', 'ACTION': action]
         params.putAll(extra)
         params.putAll(accountParams)
-        new PayflowResponseMap(httpsSender.sendPost(payflowEnvironment.url, params))
+        new PayflowResponseMap(httpsSender.sendPost(environment.url, params))
     }
 
     def methodMissing(String name, args) {

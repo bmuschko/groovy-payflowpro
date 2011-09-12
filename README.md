@@ -27,8 +27,8 @@ __Recurring Billing__
 ## Usage
 
 You can use the API by creating an instance of the class `groovy.paypal.payflow.GroovyPayflowClient`. If required
-you can set a new timeout for the HTTPS communication and the strategy for providing the request ID via the constructor or
-directly on the fields. The default timeout is 45 seconds, the default request ID generation strategy is a random UUID. The
+you can set a new timeout for the HTTPS communication and the strategy for providing the request ID directly on the fields.
+The default timeout is 45 seconds, the default request ID generation strategy is a random UUID. The
 request ID generation strategy requires you to implement the interface `groovy.paypal.payflow.PayflowRequestIdStrategy`.
 
     // Uses a timeout of 45 secs and a random UUID for request ID
@@ -41,12 +41,9 @@ request ID generation strategy requires you to implement the interface `groovy.p
         }
     }
 
-    // Setting a new timeout and custom request ID strategy via constructor
-    GroovyPayflowClient client = new GroovyPayflowClient(120, new CustomPayflowRequestIdStrategy())
-
     // Setting a new timeout and custom request ID directly on the fields
     client.httpsSender.timeout = 300
-    client.httpsSender.payflowRequestIdStrategy = new CustomPayflowRequestIdStrategy()
+    client.httpsSender.requestIdStrategy = new CustomPayflowRequestIdStrategy()
 <br>
 ### Parameterizing the client
 

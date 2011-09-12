@@ -18,11 +18,9 @@ package groovy.paypal.payflow.response
 import spock.lang.Specification
 
 /**
- * Created by IntelliJ IDEA.
- * User: Ben
- * Date: 8/28/11
- * Time: 12:59 PM
- * To change this template use File | Settings | File Templates.
+ * Payflow response map tests.
+ *
+ * @author Benjamin Muschko
  */
 class PayflowResponseMapTest extends Specification {
     def "Check successful approval"() {

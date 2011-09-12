@@ -1,0 +1,3 @@
+client {
+    timeout = 56
+}

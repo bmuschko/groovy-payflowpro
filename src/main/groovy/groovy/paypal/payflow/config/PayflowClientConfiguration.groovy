@@ -13,26 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package groovy.paypal.payflow
+package groovy.paypal.payflow.config
 
-import spock.lang.Specification
+import groovy.paypal.payflow.UUIDPayflowRequestIdStrategy
+import groovy.paypal.payflow.PayflowAccount
+import groovy.paypal.payflow.PayflowEnvironment
+import groovy.paypal.payflow.PayflowRequestIdStrategy
+import groovy.paypal.payflow.PayflowProxyServer
 
 /**
- * UUID Payflow request ID strategy tests.
+ * Payflow configuration reader.
  *
  * @author Benjamin Muschko
  */
-class UUIDPayflowRequestIdStrategyTest extends Specification {
-    def "Request ID is generated"() {
-        given: "a UUID request ID strategy"
-            UUIDPayflowRequestIdStrategy requestIdStrategy = new UUIDPayflowRequestIdStrategy()
-
-        when: "request ID is generated"
-            String requestId = requestIdStrategy.requestId
-
-        then: "request ID is valid"
-            requestId != null
-            requestId.length() == 36
-            requestId.contains('-')
-    }
+class PayflowClientConfiguration {
+    int timeout = 45
+    PayflowRequestIdStrategy requestIdStrategy = new UUIDPayflowRequestIdStrategy()
+    PayflowEnvironment environment = PayflowEnvironment.TEST
+    PayflowAccount account
+    PayflowProxyServer proxyServer
 }
