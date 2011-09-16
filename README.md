@@ -29,7 +29,7 @@ __Recurring Billing__
 You can use the API by creating an instance of the class `groovy.paypal.payflow.GroovyPayflowClient`. The implementation
 provides support for configuring the Payflow client. This can either be done by calling methods on the instance or by
 using a configuration file.
-
+<br>
 ### Programmatical configuration
 
 If required you can set a new timeout for the HTTPS communication and the strategy for providing the request ID directly on the fields.
