@@ -21,5 +21,5 @@ package groovy.paypal.payflow.config
  * @author Benjamin Muschko
  */
 interface ConfigurationReader {
-    def parseConfig(String scriptClassName)
+    def parseConfig(String environment, String scriptClassName)
 }

@@ -1,3 +1,7 @@
-client {
-    timeout = 56
+environments {
+    development {
+        payflowClient {
+            timeout = 56
+        }
+    }
 }

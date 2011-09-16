@@ -15,10 +15,11 @@
  */
 package groovy.paypal.payflow.config
 
-import groovy.paypal.payflow.PayflowEnvironment
 import groovy.paypal.payflow.PayflowRequestIdStrategy
+import groovy.paypal.payflow.PayflowServer
 import groovy.paypal.payflow.UUIDPayflowRequestIdStrategy
 import spock.lang.Specification
+import spock.lang.FailsWith
 
 /**
  * Payflow configuration reader tests.
@@ -38,60 +39,60 @@ class PayflowConfigurationReaderTest extends Specification {
 
     def "Payflow configuration is parsed for default values"() {
         when: "configuration is read"
-            PayflowClientConfiguration payflowClientConfiguration = payflowConfigurationReader.parseConfig('GroovyPayflowConfig1')
+            PayflowClientConfiguration payflowClientConfiguration = payflowConfigurationReader.parseConfig('development', 'GroovyPayflowConfig1')
 
         then: "values are correct"
             payflowClientConfiguration.timeout == 45
             payflowClientConfiguration.requestIdStrategy instanceof UUIDPayflowRequestIdStrategy
-            payflowClientConfiguration.environment == PayflowEnvironment.TEST
+            payflowClientConfiguration.server == PayflowServer.TEST
             payflowClientConfiguration.account == null
             payflowClientConfiguration.proxyServer == null
     }
 
     def "Payflow configuration is parsed for just timeout"() {
         when: "configuration is read"
-            PayflowClientConfiguration payflowClientConfiguration = payflowConfigurationReader.parseConfig('GroovyPayflowConfig2')
+            PayflowClientConfiguration payflowClientConfiguration = payflowConfigurationReader.parseConfig('development', 'GroovyPayflowConfig2')
 
         then: "values are correct"
             payflowClientConfiguration.timeout == 56
             payflowClientConfiguration.requestIdStrategy instanceof UUIDPayflowRequestIdStrategy
-            payflowClientConfiguration.environment == PayflowEnvironment.TEST
+            payflowClientConfiguration.server == PayflowServer.TEST
             payflowClientConfiguration.account == null
             payflowClientConfiguration.proxyServer == null
     }
 
     def "Payflow configuration is parsed for just timeout and request ID strategy"() {
         when: "configuration is read"
-            PayflowClientConfiguration payflowClientConfiguration = payflowConfigurationReader.parseConfig('GroovyPayflowConfig3')
+            PayflowClientConfiguration payflowClientConfiguration = payflowConfigurationReader.parseConfig('development', 'GroovyPayflowConfig3')
 
         then: "values are correct"
             payflowClientConfiguration.timeout == 56
             payflowClientConfiguration.requestIdStrategy instanceof CurrentTimestampPayflowRequestIdStrategy
-            payflowClientConfiguration.environment == PayflowEnvironment.TEST
+            payflowClientConfiguration.server == PayflowServer.TEST
             payflowClientConfiguration.account == null
             payflowClientConfiguration.proxyServer == null
     }
 
     def "Payflow configuration is parsed for just timeout, request ID strategy and environment"() {
         when: "configuration is read"
-            PayflowClientConfiguration payflowClientConfiguration = payflowConfigurationReader.parseConfig('GroovyPayflowConfig4')
+            PayflowClientConfiguration payflowClientConfiguration = payflowConfigurationReader.parseConfig('development', 'GroovyPayflowConfig4')
 
         then: "values are correct"
             payflowClientConfiguration.timeout == 56
             payflowClientConfiguration.requestIdStrategy instanceof CurrentTimestampPayflowRequestIdStrategy
-            payflowClientConfiguration.environment == PayflowEnvironment.LIVE
+            payflowClientConfiguration.server == PayflowServer.LIVE
             payflowClientConfiguration.account == null
             payflowClientConfiguration.proxyServer == null
     }
 
     def "Payflow configuration is parsed for just timeout, request ID strategy, environment and account"() {
         when: "configuration is read"
-            PayflowClientConfiguration payflowClientConfiguration = payflowConfigurationReader.parseConfig('GroovyPayflowConfig5')
+            PayflowClientConfiguration payflowClientConfiguration = payflowConfigurationReader.parseConfig('development', 'GroovyPayflowConfig5')
 
         then: "values are correct"
             payflowClientConfiguration.timeout == 56
             payflowClientConfiguration.requestIdStrategy instanceof CurrentTimestampPayflowRequestIdStrategy
-            payflowClientConfiguration.environment == PayflowEnvironment.LIVE
+            payflowClientConfiguration.server == PayflowServer.LIVE
             payflowClientConfiguration.account != null
             payflowClientConfiguration.account.partner == 'Paypal'
             payflowClientConfiguration.account.vendor == 'External'
@@ -102,12 +103,12 @@ class PayflowConfigurationReaderTest extends Specification {
 
     def "Payflow configuration is parsed for just timeout, request ID strategy, environment, account and proxy server without username/password"() {
         when: "configuration is read"
-            PayflowClientConfiguration payflowClientConfiguration = payflowConfigurationReader.parseConfig('GroovyPayflowConfig6')
+            PayflowClientConfiguration payflowClientConfiguration = payflowConfigurationReader.parseConfig('development', 'GroovyPayflowConfig6')
 
         then: "values are correct"
             payflowClientConfiguration.timeout == 56
             payflowClientConfiguration.requestIdStrategy instanceof CurrentTimestampPayflowRequestIdStrategy
-            payflowClientConfiguration.environment == PayflowEnvironment.LIVE
+            payflowClientConfiguration.server == PayflowServer.LIVE
             payflowClientConfiguration.account != null
             payflowClientConfiguration.account.partner == 'Paypal'
             payflowClientConfiguration.account.vendor == 'External'
@@ -120,12 +121,12 @@ class PayflowConfigurationReaderTest extends Specification {
 
     def "Payflow configuration is parsed for just timeout, request ID strategy, environment, account and proxy server with username/password"() {
         when: "configuration is read"
-            PayflowClientConfiguration payflowClientConfiguration = payflowConfigurationReader.parseConfig('GroovyPayflowConfig7')
+            PayflowClientConfiguration payflowClientConfiguration = payflowConfigurationReader.parseConfig('development', 'GroovyPayflowConfig7')
 
         then: "values are correct"
             payflowClientConfiguration.timeout == 56
             payflowClientConfiguration.requestIdStrategy instanceof UUIDPayflowRequestIdStrategy
-            payflowClientConfiguration.environment == PayflowEnvironment.LIVE
+            payflowClientConfiguration.server == PayflowServer.LIVE
             payflowClientConfiguration.account != null
             payflowClientConfiguration.account.partner == 'Paypal'
             payflowClientConfiguration.account.vendor == 'External'

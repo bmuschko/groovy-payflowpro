@@ -16,16 +16,16 @@
 package groovy.paypal.payflow
 
 /**
- * Payflow environment enum.
+ * Payflow server enum.
  *
  * @author Benjamin Muschko
  */
-enum PayflowEnvironment {
+enum PayflowServer {
     TEST('https://pilot-payflowpro.paypal.com'), LIVE('https://payflowpro.paypal.com')
 
     final String url
 
-    PayflowEnvironment(String url) {
+    PayflowServer(String url) {
         this.url = url
     }
 }

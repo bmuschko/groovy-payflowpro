@@ -15,11 +15,7 @@
  */
 package groovy.paypal.payflow.config
 
-import groovy.paypal.payflow.UUIDPayflowRequestIdStrategy
-import groovy.paypal.payflow.PayflowAccount
-import groovy.paypal.payflow.PayflowEnvironment
-import groovy.paypal.payflow.PayflowRequestIdStrategy
-import groovy.paypal.payflow.PayflowProxyServer
+import groovy.paypal.payflow.*
 
 /**
  * Payflow configuration reader.
@@ -29,7 +25,7 @@ import groovy.paypal.payflow.PayflowProxyServer
 class PayflowClientConfiguration {
     int timeout = 45
     PayflowRequestIdStrategy requestIdStrategy = new UUIDPayflowRequestIdStrategy()
-    PayflowEnvironment environment = PayflowEnvironment.TEST
+    PayflowServer server = PayflowServer.TEST
     PayflowAccount account
     PayflowProxyServer proxyServer
 }

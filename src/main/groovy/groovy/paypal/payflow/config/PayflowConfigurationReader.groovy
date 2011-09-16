@@ -16,7 +16,7 @@
 package groovy.paypal.payflow.config
 
 import groovy.paypal.payflow.PayflowAccount
-import groovy.paypal.payflow.PayflowEnvironment
+import groovy.paypal.payflow.PayflowServer
 import groovy.paypal.payflow.PayflowProxyServer
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -31,7 +31,7 @@ class PayflowConfigurationReader implements ConfigurationReader {
     static final String CONFIG_CLASS = 'GroovyPayflowConfig'
 
     @Override
-    def parseConfig(String scriptClassName) {
+    def parseConfig(String environment, String scriptClassName) {
         Class scriptClass = getScriptClass(scriptClassName)
 
         if(!scriptClass) {
@@ -39,7 +39,7 @@ class PayflowConfigurationReader implements ConfigurationReader {
         }
 
         PayflowClientConfiguration configurationHolder = new PayflowClientConfiguration()
-        ConfigObject config = new ConfigSlurper().parse(scriptClass)
+        ConfigObject config = new ConfigSlurper(environment).parse(scriptClass)
         parseClient(config, configurationHolder)
         parseAccount(config, configurationHolder)
         parseProxyServer(config, configurationHolder)
@@ -51,45 +51,45 @@ class PayflowConfigurationReader implements ConfigurationReader {
             return getClass().classLoader.loadClass(scriptClassName)
         }
         catch(ClassNotFoundException e) {
-            log.debug "Payflow configuration script class with name '$scriptClassName' not found."
+            log.warn "Payflow configuration script class with name '$scriptClassName' not found."
         }
     }
 
     private void parseClient(ConfigObject config, PayflowClientConfiguration configuration) {
-        if(config.client.containsKey('timeout')) {
-            configuration.timeout = config.client.timeout
+        if(config.payflowClient.containsKey('timeout')) {
+            configuration.timeout = config.payflowClient.timeout
         }
 
-        if(config.client.containsKey('requestIdStrategy')) {
-            def requestIdStrategyClass = config.client.requestIdStrategy as Class
+        if(config.payflowClient.containsKey('requestIdStrategy')) {
+            def requestIdStrategyClass = config.payflowClient.requestIdStrategy as Class
             configuration.requestIdStrategy = requestIdStrategyClass.newInstance()
         }
 
-        if(config.client.containsKey('environment')) {
-            configuration.environment = PayflowEnvironment.valueOf(config.client.environment.toUpperCase())
+        if(config.payflowClient.containsKey('server')) {
+            configuration.server = PayflowServer.valueOf(config.payflowClient.server.toUpperCase())
         }
     }
 
     private void parseAccount(ConfigObject config, PayflowClientConfiguration configuration) {
-        if(config.client.containsKey('account')) {
+        if(config.payflowClient.containsKey('account')) {
             PayflowAccount account = new PayflowAccount()
-            account.partner = config.client.account.partner
-            account.vendor = config.client.account.vendor
-            account.username = config.client.account.username
-            account.password = config.client.account.password
+            account.partner = config.payflowClient.account.partner
+            account.vendor = config.payflowClient.account.vendor
+            account.username = config.payflowClient.account.username
+            account.password = config.payflowClient.account.password
             configuration.account = account
         }
     }
 
     private void parseProxyServer(ConfigObject config, PayflowClientConfiguration configuration) {
-        if(config.client.containsKey('proxyServer')) {
+        if(config.payflowClient.containsKey('proxyServer')) {
             PayflowProxyServer proxyServer = new PayflowProxyServer()
-            proxyServer.address = config.client.proxyServer.address
-            proxyServer.port = config.client.proxyServer.port
+            proxyServer.address = config.payflowClient.proxyServer.address
+            proxyServer.port = config.payflowClient.proxyServer.port
 
-            if(config.client.proxyServer.containsKey('logonId')) {
-                proxyServer.logonId = config.client.proxyServer.logonId
-                proxyServer.password = config.client.proxyServer.password
+            if(config.payflowClient.proxyServer.containsKey('logonId')) {
+                proxyServer.logonId = config.payflowClient.proxyServer.logonId
+                proxyServer.password = config.payflowClient.proxyServer.password
             }
 
             configuration.proxyServer = proxyServer

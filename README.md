@@ -26,8 +26,13 @@ __Recurring Billing__
 
 ## Usage
 
-You can use the API by creating an instance of the class `groovy.paypal.payflow.GroovyPayflowClient`. If required
-you can set a new timeout for the HTTPS communication and the strategy for providing the request ID directly on the fields.
+You can use the API by creating an instance of the class `groovy.paypal.payflow.GroovyPayflowClient`. The implementation
+provides support for configuring the Payflow client. This can either be done by calling methods on the instance or by
+using a configuration file.
+
+### Programmatical configuration
+
+If required you can set a new timeout for the HTTPS communication and the strategy for providing the request ID directly on the fields.
 The default timeout is 45 seconds, the default request ID generation strategy is a random UUID. The
 request ID generation strategy requires you to implement the interface `groovy.paypal.payflow.PayflowRequestIdStrategy`.
 
@@ -44,8 +49,6 @@ request ID generation strategy requires you to implement the interface `groovy.p
     // Setting a new timeout and custom request ID directly on the fields
     client.httpsSender.timeout = 300
     client.httpsSender.requestIdStrategy = new CustomPayflowRequestIdStrategy()
-<br>
-### Parameterizing the client
 
 By default the client uses the testing environment `pilot-payflowpro.paypal.com`. You can easily switch between testing
 and live environment by invoking the methods `withTest()` and `withLive()`. If your network infrastructure requires you to use
@@ -58,6 +61,40 @@ either preset an account or define it yourself for each transaction as request p
 
     // Operations can be chained in any kind of order
     GroovyPayflowClient client = new GroovyPayflowClient().withLive().withProxyServer(proxyServer).useAccount(account)
+<br>
+### Per environment configuration
+
+The client supports the concept of environments. Based on a given configuration file you can specify the environment to
+be used. By default the client searches for the file `GroovyPayflowConfig.groovy` on the root level of your classpath. If the
+configuration file cannot be found the default settings are used. You can define a different configuration file sitting in any
+package as well as the environment over the constructor of `groovy.paypal.payflow.GroovyPayflowClient`. If no environment
+is given it defaults to `development`. You can use any kind of name for the environment as long as you create a closure for it.
+There's no limitation to the number of environments you can configure. If a parameter is not defined it falls back to the default values.
+The parameters `account` and `proxyServer` only get used if you specified them. As an example consider the following default
+definition:
+
+    environments {
+        development {
+            payflowClient {
+                timeout = 56
+                server = 'live'
+
+                account {
+                    partner = 'Paypal'
+                    vendor = 'External'
+                    username = 'foo'
+                    password = 'bar'
+                }
+
+                proxyServer {
+                    address = 'internal.server'
+                    port = 9999
+                    logonId = 'proxyLogon'
+                    password = 's3cr3t'
+                }
+            }
+        }
+    }
 <br>
 ### Submitting a transaction
 

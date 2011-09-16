@@ -1,2 +1,6 @@
-client {
+environments {
+    development {
+        payflowClient {
+        }
+    }
 }

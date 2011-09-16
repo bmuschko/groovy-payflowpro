@@ -34,17 +34,17 @@ class GroovyPayflowClientTest extends Specification {
             client.httpsSender.timeout == 45
             client.httpsSender.requestIdStrategy != null
             client.httpsSender.requestIdStrategy instanceof UUIDPayflowRequestIdStrategy
-            client.environment == PayflowEnvironment.TEST
+            client.server == PayflowServer.TEST
     }
 
     def "Configure client with configuation file"() {
         when: "the client is created"
-            GroovyPayflowClient client = new GroovyPayflowClient('GroovyPayflowConfig7')
+            GroovyPayflowClient client = new GroovyPayflowClient('development', 'GroovyPayflowConfig7')
 
         then: "the configuration is set"
             client.httpsSender.timeout == 56
             client.httpsSender.requestIdStrategy instanceof UUIDPayflowRequestIdStrategy
-            client.environment == PayflowEnvironment.LIVE
+            client.server == PayflowServer.LIVE
             client.accountParams.size() == 4
             client.accountParams.'PARTNER' == 'Paypal'
             client.accountParams.'VENDOR' == 'External'
@@ -57,26 +57,26 @@ class GroovyPayflowClientTest extends Specification {
             client.httpsSender.proxyServer.password == 's3cr3t'
     }
 
-    def "Set Payflow test environment"() {
+    def "Set Payflow test server"() {
         given: "the client is created"
             GroovyPayflowClient client = new GroovyPayflowClient()
 
-        when: "the Payflow environment is set to test"
+        when: "the Payflow server is set to test"
             client.withTest()
 
-        then: "the environment should be test"
-            client.environment == PayflowEnvironment.TEST
+        then: "the server should be test"
+            client.server == PayflowServer.TEST
     }
 
-    def "Set Payflow live environment"() {
+    def "Set Payflow live server"() {
         given: "the client is created"
             GroovyPayflowClient client = new GroovyPayflowClient()
 
-        when: "the Payflow environment is set to live"
+        when: "the Payflow server is set to live"
             client.withLive()
 
-        then: "the environment should be live"
-            client.environment == PayflowEnvironment.LIVE
+        then: "the server should be live"
+            client.server == PayflowServer.LIVE
     }
 
     def "Use account information"() {
@@ -130,7 +130,7 @@ class GroovyPayflowClientTest extends Specification {
             addAllParams(params, extra, createAccountMap())
             HttpsSender mockHttpsSender = Mock()
             client.httpsSender = mockHttpsSender
-            mockHttpsSender.sendPost(PayflowEnvironment.TEST.url, params) >> ['RESULT': '0']
+            mockHttpsSender.sendPost(PayflowServer.TEST.url, params) >> ['RESULT': '0']
 
         when: "the account information is set"
             client.useAccount(account)
@@ -156,7 +156,7 @@ class GroovyPayflowClientTest extends Specification {
             addAllParams(params, extra, createAccountMap())
             HttpsSender mockHttpsSender = Mock()
             client.httpsSender = mockHttpsSender
-            mockHttpsSender.sendPost(PayflowEnvironment.TEST.url, params) >> ['RESULT': '0']
+            mockHttpsSender.sendPost(PayflowServer.TEST.url, params) >> ['RESULT': '0']
 
         when: "the account information is set"
             client.useAccount(account)
@@ -184,7 +184,7 @@ class GroovyPayflowClientTest extends Specification {
             addAllParams(params, extra, createAccountMap())
             HttpsSender mockHttpsSender = Mock()
             client.httpsSender = mockHttpsSender
-            mockHttpsSender.sendPost(PayflowEnvironment.TEST.url, params) >> ['RESULT': '0']
+            mockHttpsSender.sendPost(PayflowServer.TEST.url, params) >> ['RESULT': '0']
 
         when: "the account information is set"
             client.useAccount(account)
@@ -210,7 +210,7 @@ class GroovyPayflowClientTest extends Specification {
             addAllParams(params, extra, createAccountMap())
             HttpsSender mockHttpsSender = Mock()
             client.httpsSender = mockHttpsSender
-            mockHttpsSender.sendPost(PayflowEnvironment.TEST.url, params) >> ['RESULT': '0']
+            mockHttpsSender.sendPost(PayflowServer.TEST.url, params) >> ['RESULT': '0']
 
         when: "the account information is set"
             client.useAccount(account)
@@ -238,7 +238,7 @@ class GroovyPayflowClientTest extends Specification {
             addAllParams(params, extra, createAccountMap())
             HttpsSender mockHttpsSender = Mock()
             client.httpsSender = mockHttpsSender
-            mockHttpsSender.sendPost(PayflowEnvironment.TEST.url, params) >> ['RESULT': '0']
+            mockHttpsSender.sendPost(PayflowServer.TEST.url, params) >> ['RESULT': '0']
 
         when: "the account information is set"
             client.useAccount(account)
@@ -264,7 +264,7 @@ class GroovyPayflowClientTest extends Specification {
             addAllParams(params, extra, createAccountMap())
             HttpsSender mockHttpsSender = Mock()
             client.httpsSender = mockHttpsSender
-            mockHttpsSender.sendPost(PayflowEnvironment.TEST.url, params) >> ['RESULT': '0']
+            mockHttpsSender.sendPost(PayflowServer.TEST.url, params) >> ['RESULT': '0']
 
         when: "the account information is set"
             client.useAccount(account)
@@ -292,7 +292,7 @@ class GroovyPayflowClientTest extends Specification {
             addAllParams(params, extra, createAccountMap())
             HttpsSender mockHttpsSender = Mock()
             client.httpsSender = mockHttpsSender
-            mockHttpsSender.sendPost(PayflowEnvironment.TEST.url, params) >> ['RESULT': '0']
+            mockHttpsSender.sendPost(PayflowServer.TEST.url, params) >> ['RESULT': '0']
 
         when: "the account information is set"
             client.useAccount(account)
@@ -318,7 +318,7 @@ class GroovyPayflowClientTest extends Specification {
             addAllParams(params, extra, createAccountMap())
             HttpsSender mockHttpsSender = Mock()
             client.httpsSender = mockHttpsSender
-            mockHttpsSender.sendPost(PayflowEnvironment.TEST.url, params) >> ['RESULT': '0']
+            mockHttpsSender.sendPost(PayflowServer.TEST.url, params) >> ['RESULT': '0']
 
         when: "the account information is set"
             client.useAccount(account)
@@ -346,7 +346,7 @@ class GroovyPayflowClientTest extends Specification {
             addAllParams(params, extra, createAccountMap())
             HttpsSender mockHttpsSender = Mock()
             client.httpsSender = mockHttpsSender
-            mockHttpsSender.sendPost(PayflowEnvironment.TEST.url, params) >> ['RESULT': '0']
+            mockHttpsSender.sendPost(PayflowServer.TEST.url, params) >> ['RESULT': '0']
 
         when: "the account information is set"
             client.useAccount(account)
@@ -372,7 +372,7 @@ class GroovyPayflowClientTest extends Specification {
             addAllParams(params, extra, createAccountMap())
             HttpsSender mockHttpsSender = Mock()
             client.httpsSender = mockHttpsSender
-            mockHttpsSender.sendPost(PayflowEnvironment.TEST.url, params) >> ['RESULT': '0']
+            mockHttpsSender.sendPost(PayflowServer.TEST.url, params) >> ['RESULT': '0']
 
         when: "the account information is set"
             client.useAccount(account)
@@ -400,7 +400,7 @@ class GroovyPayflowClientTest extends Specification {
             addAllParams(params, extra, createAccountMap())
             HttpsSender mockHttpsSender = Mock()
             client.httpsSender = mockHttpsSender
-            mockHttpsSender.sendPost(PayflowEnvironment.TEST.url, params) >> ['RESULT': '0']
+            mockHttpsSender.sendPost(PayflowServer.TEST.url, params) >> ['RESULT': '0']
 
         when: "the account information is set"
             client.useAccount(account)
@@ -426,7 +426,7 @@ class GroovyPayflowClientTest extends Specification {
             addAllParams(params, extra, createAccountMap())
             HttpsSender mockHttpsSender = Mock()
             client.httpsSender = mockHttpsSender
-            mockHttpsSender.sendPost(PayflowEnvironment.TEST.url, params) >> ['RESULT': '0']
+            mockHttpsSender.sendPost(PayflowServer.TEST.url, params) >> ['RESULT': '0']
 
         when: "the account information is set"
             client.useAccount(account)
@@ -454,7 +454,7 @@ class GroovyPayflowClientTest extends Specification {
             addAllParams(params, extra, createAccountMap())
             HttpsSender mockHttpsSender = Mock()
             client.httpsSender = mockHttpsSender
-            mockHttpsSender.sendPost(PayflowEnvironment.TEST.url, params) >> ['RESULT': '0']
+            mockHttpsSender.sendPost(PayflowServer.TEST.url, params) >> ['RESULT': '0']
 
         when: "the account information is set"
             client.useAccount(account)
@@ -480,7 +480,7 @@ class GroovyPayflowClientTest extends Specification {
             addAllParams(params, extra, createAccountMap())
             HttpsSender mockHttpsSender = Mock()
             client.httpsSender = mockHttpsSender
-            mockHttpsSender.sendPost(PayflowEnvironment.TEST.url, params) >> ['RESULT': '0']
+            mockHttpsSender.sendPost(PayflowServer.TEST.url, params) >> ['RESULT': '0']
 
         when: "the account information is set"
             client.useAccount(account)
@@ -508,7 +508,7 @@ class GroovyPayflowClientTest extends Specification {
             addAllParams(params, extra, createAccountMap())
             HttpsSender mockHttpsSender = Mock()
             client.httpsSender = mockHttpsSender
-            mockHttpsSender.sendPost(PayflowEnvironment.TEST.url, params) >> ['RESULT': '0']
+            mockHttpsSender.sendPost(PayflowServer.TEST.url, params) >> ['RESULT': '0']
 
         when: "the account information is set"
             client.useAccount(account)
@@ -534,7 +534,7 @@ class GroovyPayflowClientTest extends Specification {
             addAllParams(params, extra, createAccountMap())
             HttpsSender mockHttpsSender = Mock()
             client.httpsSender = mockHttpsSender
-            mockHttpsSender.sendPost(PayflowEnvironment.TEST.url, params) >> ['RESULT': '0']
+            mockHttpsSender.sendPost(PayflowServer.TEST.url, params) >> ['RESULT': '0']
 
         when: "the account information is set"
             client.useAccount(account)
@@ -562,7 +562,7 @@ class GroovyPayflowClientTest extends Specification {
             addAllParams(params, extra, createAccountMap())
             HttpsSender mockHttpsSender = Mock()
             client.httpsSender = mockHttpsSender
-            mockHttpsSender.sendPost(PayflowEnvironment.TEST.url, params) >> ['RESULT': '0']
+            mockHttpsSender.sendPost(PayflowServer.TEST.url, params) >> ['RESULT': '0']
 
         when: "the account information is set"
             client.useAccount(account)
@@ -588,7 +588,7 @@ class GroovyPayflowClientTest extends Specification {
             addAllParams(params, extra, createAccountMap())
             HttpsSender mockHttpsSender = Mock()
             client.httpsSender = mockHttpsSender
-            mockHttpsSender.sendPost(PayflowEnvironment.TEST.url, params) >> ['RESULT': '0']
+            mockHttpsSender.sendPost(PayflowServer.TEST.url, params) >> ['RESULT': '0']
 
         when: "the account information is set"
             client.useAccount(account)
@@ -616,7 +616,7 @@ class GroovyPayflowClientTest extends Specification {
             addAllParams(params, extra, createAccountMap())
             HttpsSender mockHttpsSender = Mock()
             client.httpsSender = mockHttpsSender
-            mockHttpsSender.sendPost(PayflowEnvironment.TEST.url, params) >> ['RESULT': '0']
+            mockHttpsSender.sendPost(PayflowServer.TEST.url, params) >> ['RESULT': '0']
 
         when: "the account information is set"
             client.useAccount(account)
@@ -642,7 +642,7 @@ class GroovyPayflowClientTest extends Specification {
             addAllParams(params, extra, createAccountMap())
             HttpsSender mockHttpsSender = Mock()
             client.httpsSender = mockHttpsSender
-            mockHttpsSender.sendPost(PayflowEnvironment.TEST.url, params) >> ['RESULT': '0']
+            mockHttpsSender.sendPost(PayflowServer.TEST.url, params) >> ['RESULT': '0']
 
         when: "the account information is set"
             client.useAccount(account)
@@ -670,7 +670,7 @@ class GroovyPayflowClientTest extends Specification {
             addAllParams(params, extra, createAccountMap())
             HttpsSender mockHttpsSender = Mock()
             client.httpsSender = mockHttpsSender
-            mockHttpsSender.sendPost(PayflowEnvironment.TEST.url, params) >> ['RESULT': '0']
+            mockHttpsSender.sendPost(PayflowServer.TEST.url, params) >> ['RESULT': '0']
 
         when: "the account information is set"
             client.useAccount(account)
@@ -696,7 +696,7 @@ class GroovyPayflowClientTest extends Specification {
             addAllParams(params, extra, createAccountMap())
             HttpsSender mockHttpsSender = Mock()
             client.httpsSender = mockHttpsSender
-            mockHttpsSender.sendPost(PayflowEnvironment.TEST.url, params) >> ['RESULT': '0']
+            mockHttpsSender.sendPost(PayflowServer.TEST.url, params) >> ['RESULT': '0']
 
         when: "the account information is set"
             client.useAccount(account)
@@ -724,7 +724,7 @@ class GroovyPayflowClientTest extends Specification {
             addAllParams(params, extra, createAccountMap())
             HttpsSender mockHttpsSender = Mock()
             client.httpsSender = mockHttpsSender
-            mockHttpsSender.sendPost(PayflowEnvironment.TEST.url, params) >> ['RESULT': '0']
+            mockHttpsSender.sendPost(PayflowServer.TEST.url, params) >> ['RESULT': '0']
 
         when: "the account information is set"
             client.useAccount(account)
@@ -750,7 +750,7 @@ class GroovyPayflowClientTest extends Specification {
             addAllParams(params, extra, createAccountMap())
             HttpsSender mockHttpsSender = Mock()
             client.httpsSender = mockHttpsSender
-            mockHttpsSender.sendPost(PayflowEnvironment.TEST.url, params) >> ['RESULT': '0']
+            mockHttpsSender.sendPost(PayflowServer.TEST.url, params) >> ['RESULT': '0']
 
         when: "the account information is set"
             client.useAccount(account)
@@ -778,7 +778,7 @@ class GroovyPayflowClientTest extends Specification {
             addAllParams(params, extra, createAccountMap())
             HttpsSender mockHttpsSender = Mock()
             client.httpsSender = mockHttpsSender
-            mockHttpsSender.sendPost(PayflowEnvironment.TEST.url, params) >> ['RESULT': '0']
+            mockHttpsSender.sendPost(PayflowServer.TEST.url, params) >> ['RESULT': '0']
 
         when: "the account information is set"
             client.useAccount(account)
@@ -804,7 +804,7 @@ class GroovyPayflowClientTest extends Specification {
             addAllParams(params, extra, createAccountMap())
             HttpsSender mockHttpsSender = Mock()
             client.httpsSender = mockHttpsSender
-            mockHttpsSender.sendPost(PayflowEnvironment.TEST.url, params) >> ['RESULT': '0']
+            mockHttpsSender.sendPost(PayflowServer.TEST.url, params) >> ['RESULT': '0']
 
         when: "the account information is set"
             client.useAccount(account)
@@ -832,7 +832,7 @@ class GroovyPayflowClientTest extends Specification {
             addAllParams(params, extra, createAccountMap())
             HttpsSender mockHttpsSender = Mock()
             client.httpsSender = mockHttpsSender
-            mockHttpsSender.sendPost(PayflowEnvironment.TEST.url, params) >> ['RESULT': '0']
+            mockHttpsSender.sendPost(PayflowServer.TEST.url, params) >> ['RESULT': '0']
 
         when: "the account information is set"
             client.useAccount(account)
@@ -858,7 +858,7 @@ class GroovyPayflowClientTest extends Specification {
             addAllParams(params, extra, createAccountMap())
             HttpsSender mockHttpsSender = Mock()
             client.httpsSender = mockHttpsSender
-            mockHttpsSender.sendPost(PayflowEnvironment.TEST.url, params) >> ['RESULT': '0']
+            mockHttpsSender.sendPost(PayflowServer.TEST.url, params) >> ['RESULT': '0']
 
         when: "the account information is set"
             client.useAccount(account)
@@ -885,7 +885,7 @@ class GroovyPayflowClientTest extends Specification {
             addAllParams(params, extra, createAccountMap())
             HttpsSender mockHttpsSender = Mock()
             client.httpsSender = mockHttpsSender
-            mockHttpsSender.sendPost(PayflowEnvironment.TEST.url, params) >> ['RESULT': '0']
+            mockHttpsSender.sendPost(PayflowServer.TEST.url, params) >> ['RESULT': '0']
 
         when: "the account information is set"
             client.useAccount(account)
