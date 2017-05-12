@@ -29,8 +29,7 @@ __Recurring Billing__
 You can use the API by creating an instance of the class `groovy.paypal.payflow.GroovyPayflowClient`. The implementation
 provides support for configuring the Payflow client. This can either be done by calling methods on the instance or by
 using a configuration file.
-<br>
-<br>
+
 ### Programmatical configuration
 
 If required you can set a new timeout for the HTTPS communication and the strategy for providing the request ID directly on the fields.
@@ -62,7 +61,7 @@ either preset an account or define it yourself for each transaction as request p
 
     // Operations can be chained in any kind of order
     GroovyPayflowClient client = new GroovyPayflowClient().withLive().withProxyServer(proxyServer).useAccount(account)
-<br>
+
 ### Per environment configuration
 
 The client supports the concept of environments. Based on a given configuration file you can specify the environment to
@@ -96,7 +95,7 @@ definition:
             }
         }
     }
-<br>
+
 ### Submitting a transaction
 
 There are two ways you can submit a transaction. The default way is to call the transaction method and provide the request
@@ -113,7 +112,7 @@ of arguments you can use is not limited.
 
     // Dynamic definition of submitting a sale transaction
     def response = client.submitSaleWithTenderAndAcctAndExpdateAndAmt('C', 4111111111111111, '0114', 14.00)
-<br>
+
 ### Using the response
 
 In both ways the response is a specialized `Map` of type `groovy.paypal.payflow.response.PayflowResponseMap`. If you'd rather
